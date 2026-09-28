@@ -1,0 +1,116 @@
+"use client";
+
+import { assets } from "@/assets/assets";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import HamX from "./ham-x";
+
+export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
+
+  const router = useRouter();
+
+  const checkIn = () => {
+    setUserOpen((prev) => !prev);
+  };
+
+  const handleSignOut = async () => {
+    router.push("/");
+  };
+  return (
+    <nav className="flex items-center justify-between bg-black px-6 py-3 text-white md:px-16 lg:px-32">
+      <Link href="/">
+        <h1 className="text-[#fce3c7]">HC Store</h1>
+      </Link>
+      <div className="flex items-center gap-6 max-md:hidden lg:gap-8">
+        <Link href="/" className="transition hover:text-gray-400">
+          Home
+        </Link>
+        <Link href="/all-products" className="transition hover:text-gray-400">
+          Shop
+        </Link>
+        <Link href="/about" className="transition hover:text-gray-400">
+          About Us
+        </Link>
+        <Link href="/contact" className="transition hover:text-gray-400">
+          Contact
+        </Link>
+      </div>
+
+      <div>
+        <ul className="hidden items-center gap-4 md:flex">
+          <button>
+            <Image className="h-4 w-4" src={assets.search_icon} alt="search" />
+          </button>
+
+          <button className="flex items-center gap-2 transition hover:text-gray-400">
+            <Image src={assets.heart_icon} alt="favorite" className="w-4" />
+          </button>
+
+          <Link
+            href={"/cart"}
+            className="flex items-center gap-2 transition hover:text-gray-400"
+          >
+            <Image src={assets.cart_icon} alt="cart" />
+          </Link>
+
+          <button
+            onClick={checkIn}
+            className="flex items-center gap-2 transition hover:text-gray-400"
+          >
+            <Image src={assets.user_icon} alt="user" />
+          </button>
+        </ul>
+        {/* for mobile view */}
+        <div className="flex items-center justify-center gap-3 md:hidden">
+          <button>
+            <Image className="h-6 w-6" src={assets.search_icon} alt="search" />
+          </button>
+
+          <button className="flex items-center gap-2 transition hover:text-gray-400">
+            <Image src={assets.cart_icon} alt="cart" className="h-6 w-6" />
+          </button>
+          <button
+            onClick={checkIn}
+            className="flex items-center gap-2 transition hover:text-gray-400"
+          >
+            <Image src={assets.user_icon} alt="user" className="h-6 w-6" />
+          </button>
+          <HamX isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="flex-full absolute top-13 right-0 z-10 flex h-full w-[70%] flex-col bg-black text-white md:hidden">
+          <div className="mt-16 flex flex-col items-center gap-6">
+            <Link href="/" className="transition hover:text-gray-400">
+              Home
+            </Link>
+            <Link
+              href="/all-products"
+              className="transition hover:text-gray-400"
+            >
+              Shop
+            </Link>
+            <Link href="/about" className="transition hover:text-gray-400">
+              About Us
+            </Link>
+            <Link href="/contact" className="transition hover:text-gray-400">
+              Contact
+            </Link>
+
+            <Link
+              href="/favorites"
+              className="flex items-center gap-2 transition hover:text-gray-400"
+            >
+              Favorites
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
