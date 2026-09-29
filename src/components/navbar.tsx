@@ -1,7 +1,7 @@
 "use client";
 
 import { assets } from "@/assets/assets";
-import { signOut } from "@/features/auth/actions/auth-actions";
+import { signOut } from "@/features/auth/actions/auth-action";
 import { useAppContext } from "@/features/auth/context/app-context";
 import Image from "next/image";
 import Link from "next/link";

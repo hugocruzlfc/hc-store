@@ -1,3 +1,4 @@
+import { AppContextProvider } from "@/features/auth/context/app-context";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -25,8 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${outfit.className}antialiased text-gray-700`}
       >
-        <Toaster />
-        {children}
+        <AppContextProvider>
+          <Toaster />
+          {children}
+        </AppContextProvider>
       </body>
     </html>
   );

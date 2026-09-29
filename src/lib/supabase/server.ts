@@ -9,8 +9,8 @@ export async function supabaseServerClient() {
   // Server-side Supabase client wired to Next's cookie store so the
   // user's session is maintained across server components and actions.
   return createServerClient(
-    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
