@@ -1,6 +1,8 @@
 "use client";
 
 import { assets } from "@/assets/assets";
+import { signOut } from "@/features/auth/actions/auth-actions";
+import { useAppContext } from "@/features/auth/context/app-context";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,6 +12,7 @@ import HamX from "./ham-x";
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
+  const { session, setSession } = useAppContext();
 
   const router = useRouter();
 
@@ -18,6 +21,8 @@ export const Navbar = () => {
   };
 
   const handleSignOut = async () => {
+    await signOut();
+    setSession(null);
     router.push("/");
   };
   return (
@@ -79,8 +84,49 @@ export const Navbar = () => {
           >
             <Image src={assets.user_icon} alt="user" className="h-6 w-6" />
           </button>
+
           <HamX isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
+        {userOpen && (
+          <div className="flex-full absolute top-23 right-0 z-10 flex h-50 w-87.5 flex-col rounded-b-2xl bg-black text-white max-md:top-12 md:top-12">
+            <div className="flex flex-row items-center justify-center">
+              {session ? (
+                <p className="mr-2 text-[#fce3c7]">{session?.user.email}</p>
+              ) : (
+                <div>
+                  <Link
+                    href="/login"
+                    className="transition hover:text-gray-400"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {session && (
+              <div className="mt-2 flex flex-col items-center gap-2">
+                <Link
+                  href="/profile"
+                  className="transition hover:text-gray-400"
+                >
+                  My Profile
+                </Link>
+                <Link href="/orders" className="transition hover:text-gray-400">
+                  My Orders
+                </Link>
+                <Link
+                  href="/reviews"
+                  className="transition hover:text-gray-400"
+                >
+                  My Reviews
+                </Link>
+
+                <button onClick={handleSignOut}>Sign Out</button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {isOpen && (

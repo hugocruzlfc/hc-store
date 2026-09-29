@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { supabaseClient } from "@/lib/supabase/client";
 import { Session } from "@supabase/supabase-js";
 import {
   createContext,
@@ -21,7 +21,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    const supabase = createClient();
+    const supabase = supabaseClient();
 
     const fetchSession = async () => {
       const {

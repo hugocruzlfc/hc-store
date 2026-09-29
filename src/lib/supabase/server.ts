@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
-export async function createClient() {
+export async function supabaseServerClient() {
   const cookieStore = await cookies();
 
   // Server-side Supabase client wired to Next's cookie store so the
@@ -36,7 +36,7 @@ export async function createClient() {
  * several server components ask for the user at the same time.
  */
 export const getCachedUser = cache(async () => {
-  const supabase = await createClient();
+  const supabase = await supabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
