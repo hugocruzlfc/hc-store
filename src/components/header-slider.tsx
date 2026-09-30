@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { assets } from "@/assets/assets";
+import { assets } from "@/assets";
 import Image from "next/image";
 
 export default function HeaderSlider() {
