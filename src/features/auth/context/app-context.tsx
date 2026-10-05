@@ -29,23 +29,23 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         error,
       } = await supabase.auth.getSession();
       if (error || !session) {
-        console.log("No active session found.");
+        // console.log("No active session found.");
         return;
       }
-      console.log("Active session found:", session);
+      // console.log("Active session found:", session);
       setSession(session);
     };
 
     fetchSession();
 
     supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth State Changed:==<<>>", event, session);
+      // console.log("Auth State Changed:==<<>>", event, session);
       if (event === "SIGNED_IN") {
-        console.log("User signed in:", session?.user.email);
+        // console.log("User signed in:", session?.user.email);
         fetchSession(); // Fetch new session on sign-in
         // Fetch user data here if needed
       } else if (event === "SIGNED_OUT") {
-        console.log("User signed out");
+        // console.log("User signed out");
         setSession(null);
         // Handle sign out logic here if needed
       }

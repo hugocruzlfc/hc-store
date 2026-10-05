@@ -128,9 +128,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 Add to Cart
               </button>
 
-              <button className="w-full bg-[#043033] py-3.5 text-white transition hover:bg-black">
-                <Link href={`/buy-now/${product.id}`}> Buy now</Link>
-              </button>
+              <Link
+                href={`/buy-now/${product.id}`}
+                className="w-full bg-[#043033] py-3.5 text-white transition hover:bg-black"
+              >
+                <button className="w-full">Buy now</button>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,8 +1,9 @@
 "use server";
 
-import { supabaseServerClient } from "@/lib/supabase/server";
+import { getCachedUser, supabaseServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 interface AddressDBParams {
   region: string;
@@ -15,15 +16,14 @@ interface AddressDBParams {
   flag: string;
 }
 
-export async function fetchAddresses() {
+export const fetchAddresses = cache(async () => {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const user = await getCachedUser();
+  const userId = user?.id;
 
   if (!userId) {
     console.log("User not authenticated-->>cartActions.ts");
     redirect("/login");
-    // throw new Error("User not authenticated-->>cartActions.ts");
   }
 
   const { data: addresses, error } = await supabase
@@ -34,16 +34,16 @@ export async function fetchAddresses() {
 
   if (error) {
     console.error("Error fetching addresses in address action :", error);
-    throw new Error("Error fetching addresses from address action  ");
+    throw new Error("Error fetching addresses from address action");
   }
 
-  return addresses;
-}
+  return addresses ?? [];
+});
 
 export async function saveAddressDB(formData: AddressDBParams) {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const user = await getCachedUser();
+  const userId = user?.id;
 
   if (!userId) {
     console.log("User not authenticated-->>cartActions.ts");
@@ -82,13 +82,12 @@ export async function saveAddressDB(formData: AddressDBParams) {
 
 export async function makeDefaultAddress(addressId: string) {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const user = await getCachedUser();
+  const userId = user?.id;
 
   if (!userId) {
     console.log("User not authenticated-->>cartActions.ts");
     redirect("/login");
-    // throw new Error("User not authenticated-->>cartActions.ts");
   }
 
   const { error } = await supabase

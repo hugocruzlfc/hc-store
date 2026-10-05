@@ -6,10 +6,11 @@ import { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ productId: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const product = await fetchProductById(id);
+  const { productId } = await params;
+  const product = await fetchProductById(productId);
+  console.log(product);
   return {
     title: `Buy now - ${product.name}`,
     description: product.description,
