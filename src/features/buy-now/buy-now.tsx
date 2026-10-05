@@ -71,35 +71,34 @@ export default function BuyNow({ product, addresses }: BuyNowProps) {
         },
         body: JSON.stringify({
           email: session?.user?.email,
-          amount: Math.round(totalCost * 100),
+          amount: totalCost * 100 + product.product_shipping_fee * 100,
           source: "buy-now",
         }),
       });
 
       const paystackResult = await result.json();
 
-      if (!result.ok) {
-        throw new Error(paystackResult?.message ?? "Payment request failed");
+      if (result.status) {
+        localStorage.setItem(
+          "paymentInformation",
+          JSON.stringify({
+            userId: session?.user?.id,
+            productName: product.name,
+            productCategory: product.category,
+            quantity: quantity,
+            image: product.image_url_array[0],
+            amount: totalCost + product.product_shipping_fee,
+            userEmail: session?.user?.email,
+            fullAddressFields: selectedAddress,
+          }),
+        );
+        router.push(paystackResult.data.authorization_url);
       }
-
-      localStorage.setItem(
-        "paymentInformation",
-        JSON.stringify({
-          userId: session?.user?.id,
-          productName: product.name,
-          productCategory: product.category,
-          quantity,
-          image: product.image_url_array[0],
-          amount: totalCost,
-          userEmail: session?.user?.email,
-          fullAddressFields: selectedAddress,
-        }),
-      );
-
-      router.push(paystackResult.data.authorization_url);
     } catch (error) {
-      console.error("Payment Error:", error);
+      console.log("Payment Error:", error);
       toast.error("Payment failed. Please try again.");
+    } finally {
+      console.log("Payment Processed");
     }
   };
 

@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import HeaderSlider from "@/components/header-slider";
 import { Navbar } from "@/components/navbar";
-import { fetchProducts } from "@/features/products/actions/products-action";
+import { fetchProducts } from "@/features/products/actions/products";
 import HomeProducts from "@/features/products/home-product";
 
 export default async function HomePage() {

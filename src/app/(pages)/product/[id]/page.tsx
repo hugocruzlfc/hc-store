@@ -1,4 +1,4 @@
-import { fetchProductById } from "@/features/products/actions/products-action";
+import { fetchProductById } from "@/features/products/actions/products";
 import ProductDetails from "@/features/products/product-details";
 import { Metadata } from "next";
 

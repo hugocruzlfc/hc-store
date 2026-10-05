@@ -2,7 +2,7 @@
 
 import { assets } from "@/assets";
 import { Navbar } from "@/components/navbar";
-import { env } from "@/lib/env";
+import { env } from "@/lib/env/client";
 import { ProductParams } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
