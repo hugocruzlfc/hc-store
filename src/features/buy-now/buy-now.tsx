@@ -1,7 +1,7 @@
 "use client";
 
 import { assets } from "@/assets";
-import { AddressParams, ProductParams } from "@/lib/types";
+import { AddressParams, ProductParams } from "@/shared/types";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
@@ -33,8 +33,9 @@ export default function BuyNow({ product, addresses }: BuyNowProps) {
     addresses.find((address) => address.id === selectedAddressId) ??
     defaultAddress;
 
+  const shippingFee = product.product_shipping_fee ?? 0;
   const subtotal = quantity * product.price;
-  const totalCost = subtotal + product.product_shipping_fee;
+  const totalCost = subtotal + shippingFee;
 
   useEffect(() => {
     localStorage.removeItem("paymentInformation");
@@ -72,7 +73,7 @@ export default function BuyNow({ product, addresses }: BuyNowProps) {
         },
         body: JSON.stringify({
           email: session?.user?.email,
-          amount: totalCost * 100 + product.product_shipping_fee * 100,
+          amount: totalCost * 100 + shippingFee * 100,
           source: "buy-now",
         }),
       });
@@ -88,7 +89,7 @@ export default function BuyNow({ product, addresses }: BuyNowProps) {
             productCategory: product.category,
             quantity: quantity,
             image: product.image_url_array[0],
-            amount: totalCost + product.product_shipping_fee,
+            amount: totalCost + shippingFee,
             userEmail: session?.user?.email,
             fullAddressFields: selectedAddress,
           }),

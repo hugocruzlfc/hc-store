@@ -1,8 +1,8 @@
 import { fetchAddresses } from "@/features/address/actions/address";
 import AddressCard from "@/features/address/address-card";
 import NewAddress from "@/features/address/new-address";
-import { AddressParams } from "@/lib/types";
 import { Navbar } from "@/shared/components/navbar";
+import { AddressParams } from "@/shared/types";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: "My Addresses" };

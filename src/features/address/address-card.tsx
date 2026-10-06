@@ -1,7 +1,7 @@
 "use client";
 
 import { makeDefaultAddress } from "@/features/address/actions/address";
-import { AddressParams } from "@/lib/types";
+import { AddressParams } from "@/shared/types";
 import Link from "next/link";
 import toast from "react-hot-toast";
 

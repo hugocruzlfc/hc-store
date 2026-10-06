@@ -1,6 +1,6 @@
 "use client";
 
-import { AddressParams, ProductParams } from "@/lib/types";
+import { AddressParams, ProductParams } from "@/shared/types";
 import Link from "next/link";
 
 interface OrderSummaryCardProps {

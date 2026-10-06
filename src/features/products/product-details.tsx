@@ -2,8 +2,8 @@
 
 import { assets } from "@/assets";
 import { env } from "@/lib/env/client";
-import { ProductParams } from "@/lib/types";
 import { Navbar } from "@/shared/components/navbar";
+import { ProductParams } from "@/shared/types";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -13,6 +13,11 @@ interface ProductDetailsProps {
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
+  const categoryName =
+    typeof product.category === "string"
+      ? product.category
+      : (product.category?.name ?? "Uncategorized");
+
   const handleAddToCart = () => {
     // const addItem = cartStore.getState().addItem;
     // addItem(product);
@@ -96,9 +101,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   )}
                   <tr>
                     <td className="font-medium text-gray-600">Category</td>
-                    <td className="text-gray-800/50">
-                      {product.category.name}
-                    </td>
+                    <td className="text-gray-800/50">{categoryName}</td>
                   </tr>
                 </tbody>
               </table>

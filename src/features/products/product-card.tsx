@@ -1,4 +1,4 @@
-import { ProductParams } from "@/lib/types";
+import { ProductParams } from "@/shared/types";
 import Image from "next/image";
 import Link from "next/link";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductParams } from "@/lib/types";
+import { ProductParams } from "@/shared/types";
 import ProductCard from "./product-card";
 
 interface HomeProductsParams {

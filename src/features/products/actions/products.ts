@@ -1,20 +1,22 @@
 "use server";
 
 import { supabaseServerClient } from "@/lib/supabase/server";
-import { ProductParams } from "@/lib/types";
+import { ProductParams } from "@/shared/types";
 
 export async function fetchProducts(): Promise<ProductParams[]> {
   const supabase = await supabaseServerClient();
-  const { data: products, error } = await supabase.from("products").select("*");
+
+  const { data: products, error } = await supabase
+    .from("products")
+    .select("*, category:categories!fk_category(id, name)")
+    .returns<ProductParams[]>();
 
   if (error) {
     console.log(error);
     return [];
   }
 
-  console.log("Fetched products:===.>>", products);
-
-  return products;
+  return products ?? [];
 }
 
 export async function fetchProductById(id: string) {
@@ -22,7 +24,7 @@ export async function fetchProductById(id: string) {
   try {
     const { data: product, error } = await supabase
       .from("products")
-      .select("*,category:categories!fk_category(name)")
+      .select("*, category:categories!fk_category(id, name)")
       .eq("id", id)
       .single();
 
@@ -31,7 +33,7 @@ export async function fetchProductById(id: string) {
       return null;
     }
 
-    return product;
+    return product as ProductParams | null;
   } catch (error) {
     console.log(error);
     return null;

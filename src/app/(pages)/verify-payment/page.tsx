@@ -1,5 +1,5 @@
+import { checkOrder } from "@/features/order/actions/order";
 import VerifyPay from "@/features/verify-pay/verify-pay";
-import { checkOrder } from "@/shared/actions/order";
 import { redirect } from "next/navigation";
 
 export default async function VerifyPaymentPage({

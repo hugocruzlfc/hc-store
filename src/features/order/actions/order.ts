@@ -1,7 +1,7 @@
 "use server";
 
 import { supabaseServerClient } from "@/lib/supabase/server";
-import { OrderParams } from "@/lib/types";
+import { OrderParams } from "@/shared/types";
 
 interface OrderItemsParams {
   amount: number;
@@ -132,5 +132,5 @@ export async function fetchUserOrders(): Promise<OrderParams[]> {
     return [];
   }
 
-  return allUserOrders;
+  return allUserOrders as OrderParams[];
 }
