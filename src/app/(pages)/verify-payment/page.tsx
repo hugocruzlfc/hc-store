@@ -1,5 +1,6 @@
 import { checkOrder } from "@/features/order/actions/order";
 import VerifyPay from "@/features/verify-pay/verify-pay";
+import { env } from "@/lib/env/client";
 import { redirect } from "next/navigation";
 
 export default async function VerifyPaymentPage({
@@ -16,7 +17,7 @@ export default async function VerifyPaymentPage({
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/verify-payment/${reference}`,
+    `${env.NEXT_PUBLIC_SITE_URL}/api/verify-payment/${reference}`,
   );
 
   const result = await response.json();
