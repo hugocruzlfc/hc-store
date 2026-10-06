@@ -1,13 +1,9 @@
 "use client";
 
 import { env } from "@/lib/env/client";
-import { reviewImagesSchema, reviewSchema } from "@/lib/schema-validations";
 import { OrderParams } from "@/shared/types";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { createReview, uploadImagesToSupabase } from "./actions/review";
+import { useReviewForm } from "./hooks/use-review-form";
 import StarRating from "./star-rating";
 
 interface ReviewOrderProps {
@@ -15,92 +11,23 @@ interface ReviewOrderProps {
 }
 
 export default function ReviewOrder({ order }: ReviewOrderProps) {
-  const [reviewImageFiles, setReviewImageFiles] = useState<
-    (File | undefined)[]
-  >([]);
-  const [reviewTitle, setReviewTitle] = useState("");
-  const [reviewDescription, setReviewDescription] = useState("");
-  const [productRating, setProductRating] = useState(5);
-  const [deliveryRating, setDeliveryRating] = useState(5);
-  const router = useRouter();
-  const [formErrors, setFormErrors] = useState<Array<Record<string, string>>>(
-    [],
-  );
-  const [imagesError, setImagesError] = useState<string[]>([]);
+  const {
+    form,
+    reviewTitle,
+    reviewDescription,
+    productRating,
+    deliveryRating,
+    reviewImages,
+    previewUrls,
+    handleImageChange,
+    onSubmit,
+  } = useReviewForm(order);
 
   const colorDisabled =
-    !reviewTitle || !reviewDescription || reviewImageFiles.length <= 0;
+    !reviewTitle.trim() ||
+    !reviewDescription.trim() ||
+    reviewImages.length <= 0;
 
-  const handleSubmitReview = async () => {
-    let localError = false;
-    const reviewFormValidation = reviewSchema.safeParse({
-      reviewTitle,
-      reviewDescription,
-    });
-
-    const reviewImagesValidation = reviewImagesSchema.safeParse({
-      reviewImages: reviewImageFiles,
-    });
-
-    const reviewResult = reviewFormValidation.error?.issues.map((each) => {
-      return { [each.path[0]]: each.message };
-    });
-
-    if (reviewResult) {
-      localError = true;
-      setFormErrors(reviewResult);
-    }
-
-    if (reviewImagesValidation.error?.issues) {
-      localError = true;
-      setImagesError(
-        reviewImagesValidation.error.issues.map((each) => each.message),
-      );
-    }
-
-    if (localError) {
-      toast.error("Please fix the errors");
-      return;
-    }
-
-    try {
-      const imageReviewsFormData = new FormData();
-      reviewImageFiles.forEach((file) => {
-        if (file) {
-          imageReviewsFormData.append("reviewImages", file);
-        }
-      });
-      const imageUrlsInSupabase =
-        await uploadImagesToSupabase(imageReviewsFormData);
-
-      if (imageUrlsInSupabase.success) {
-        const { reviewData } = await createReview({
-          orderToReview: order,
-          reviewData: {
-            reviewTitle,
-            reviewDescription,
-            productRating,
-            deliveryRating,
-            reviewImageUrls: imageUrlsInSupabase.imageUrls || [],
-          },
-        });
-        if (reviewData) {
-          toast.success("Review created successfully!");
-          router.push("/");
-        } else {
-          toast.error("Failed to create review. Please try again.");
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setReviewTitle("");
-      setReviewDescription("");
-      setProductRating(5);
-      setDeliveryRating(5);
-      setReviewImageFiles([]);
-    }
-  };
   return (
     <>
       <div className="space-y-10 px-6 pt-14 md:px-16 lg:px-32">
@@ -147,10 +74,8 @@ export default function ReviewOrder({ order }: ReviewOrderProps) {
         </div>
       </div>
 
-      {/* adding the review */}
       <div className="flex min-h-screen flex-1 flex-col items-center justify-between">
         <div className="max-w-lg space-y-5 p-4 md:p-10">
-          {/* image upload code begin */}
           <div>
             <label
               htmlFor="imageFiles"
@@ -180,45 +105,35 @@ export default function ReviewOrder({ order }: ReviewOrderProps) {
               </p>
 
               <input
-                onChange={(e) => {
-                  setImagesError([]);
-                  setReviewImageFiles(
-                    e.target.files ? Array.from(e.target.files) : [],
-                  );
-                }}
                 id="imageFiles"
                 type="file"
                 className="hidden"
                 multiple
                 accept="image/*"
+                onChange={handleImageChange}
               />
             </label>
 
             <div className="flex flex-row flex-wrap">
-              {reviewImageFiles &&
-                reviewImageFiles.map((eachFile, index) =>
-                  eachFile ? (
-                    <Image
-                      key={index}
-                      className="m-1 max-w-32 cursor-pointer"
-                      src={URL.createObjectURL(eachFile)}
-                      alt=""
-                      width={100}
-                      height={100}
-                    />
-                  ) : null,
-                )}
+              {previewUrls.map((imageUrl, index) => (
+                <Image
+                  key={`${imageUrl}-${index}`}
+                  className="m-1 max-w-32 cursor-pointer"
+                  src={imageUrl}
+                  alt=""
+                  width={100}
+                  height={100}
+                />
+              ))}
             </div>
 
-            {imagesError &&
-              imagesError.map((each, index) => (
-                <p key={index} className="block text-sm text-red-400">
-                  {each}
-                </p>
-              ))}
+            {form.formState.errors.reviewImages && (
+              <p className="block text-sm text-red-400">
+                {String(form.formState.errors.reviewImages.message)}
+              </p>
+            )}
           </div>
 
-          {/* end image upload */}
           <div className="flex max-w-md flex-col gap-1">
             <label className="text-base font-medium" htmlFor="product-name">
               Review Title
@@ -228,25 +143,19 @@ export default function ReviewOrder({ order }: ReviewOrderProps) {
               type="text"
               placeholder="Type here"
               className="rounded border border-gray-500/40 px-3 py-2 outline-none md:py-2.5"
-              onChange={(e) => {
-                setFormErrors([]);
-                setReviewTitle(e.target.value);
-              }}
-              value={reviewTitle}
+              {...form.register("reviewTitle", {
+                onChange: () => form.clearErrors("reviewTitle"),
+              })}
               required
             />
 
-            {formErrors &&
-              formErrors.map((each, index) => {
-                if (each.reviewTitle) {
-                  return (
-                    <p key={index} className="block text-sm text-red-400">
-                      {each.reviewTitle}
-                    </p>
-                  );
-                }
-              })}
+            {form.formState.errors.reviewTitle && (
+              <p className="block text-sm text-red-400">
+                {String(form.formState.errors.reviewTitle.message)}
+              </p>
+            )}
           </div>
+
           <div className="flex max-w-md flex-col gap-1">
             <label
               className="text-base font-medium"
@@ -259,42 +168,52 @@ export default function ReviewOrder({ order }: ReviewOrderProps) {
               rows={4}
               className="resize-none rounded border border-gray-500/40 px-3 py-2 outline-none md:py-2.5"
               placeholder="Type here"
-              onChange={(e) => {
-                setFormErrors([]);
-                setReviewDescription(e.target.value);
-              }}
-              value={reviewDescription}
+              {...form.register("reviewDescription", {
+                onChange: () => form.clearErrors("reviewDescription"),
+              })}
               required
             ></textarea>
-            {formErrors &&
-              formErrors.map((each, index) => {
-                if (each.reviewDescription) {
-                  return (
-                    <p key={index} className="block text-sm text-red-400">
-                      {each.reviewDescription}
-                    </p>
-                  );
-                }
-              })}
+
+            {form.formState.errors.reviewDescription && (
+              <p className="block text-sm text-red-400">
+                {String(form.formState.errors.reviewDescription.message)}
+              </p>
+            )}
           </div>
 
           <div className="flex max-w-md flex-col gap-1">
             <label className="text-base font-medium" htmlFor="product-name">
               Product Rating
             </label>
-            <StarRating rating={productRating} setRating={setProductRating} />
+            <StarRating
+              rating={productRating}
+              setRating={(nextRating) => {
+                form.setValue("productRating", nextRating, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+            />
           </div>
 
           <div className="flex max-w-md flex-col gap-1">
             <label className="text-base font-medium" htmlFor="product-name">
               Delivery Rating
             </label>
-            <StarRating rating={deliveryRating} setRating={setDeliveryRating} />
+            <StarRating
+              rating={deliveryRating}
+              setRating={(nextRating) => {
+                form.setValue("deliveryRating", nextRating, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+            />
           </div>
 
           <button
-            onClick={handleSubmitReview}
             type="submit"
+            onClick={form.handleSubmit(onSubmit)}
             className={`rounded px-8 py-2.5 font-medium text-white ${
               colorDisabled ? "bg-gray-500" : "bg-[#043033]"
             }`}
@@ -302,7 +221,6 @@ export default function ReviewOrder({ order }: ReviewOrderProps) {
             Submit Review
           </button>
         </div>
-        {/* <Footer /> */}
       </div>
     </>
   );
