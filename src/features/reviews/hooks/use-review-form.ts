@@ -1,8 +1,8 @@
 import { reviewImagesSchema, reviewSchema } from "@/lib/schema-validations";
 import { OrderParams } from "@/shared/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { createReview, uploadImagesToSupabase } from "../actions/review";
 
@@ -28,12 +28,36 @@ export function useReviewForm(order: OrderParams) {
     mode: "onSubmit",
   });
 
-  const reviewTitle = form.watch("reviewTitle") ?? "";
-  const reviewDescription = form.watch("reviewDescription") ?? "";
-  const productRating = form.watch("productRating") ?? 5;
-  const deliveryRating = form.watch("deliveryRating") ?? 5;
-  const reviewImages = form.watch("reviewImages") ?? [];
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const reviewTitle = useWatch({
+    control: form.control,
+    name: "reviewTitle",
+    defaultValue: "",
+  });
+  const reviewDescription = useWatch({
+    control: form.control,
+    name: "reviewDescription",
+    defaultValue: "",
+  });
+  const productRating = useWatch({
+    control: form.control,
+    name: "productRating",
+    defaultValue: 5,
+  });
+  const deliveryRating = useWatch({
+    control: form.control,
+    name: "deliveryRating",
+    defaultValue: 5,
+  });
+  const reviewImages = useWatch({
+    control: form.control,
+    name: "reviewImages",
+    defaultValue: [] as File[],
+  });
+
+  const previewUrls = useMemo(
+    () => reviewImages.map((file) => URL.createObjectURL(file)),
+    [reviewImages],
+  );
 
   useEffect(() => {
     return () => {
@@ -50,7 +74,6 @@ export function useReviewForm(order: OrderParams) {
       shouldDirty: true,
       shouldTouch: true,
     });
-    setPreviewUrls(files.map((file) => URL.createObjectURL(file)));
     event.target.value = "";
   };
 

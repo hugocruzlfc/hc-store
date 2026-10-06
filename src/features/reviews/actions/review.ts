@@ -100,3 +100,22 @@ export async function createReview({
 
   return { success: true, reviewData: reviewDataFromDB };
 }
+
+export async function fetchReviewsByUserId() {
+  const supabase = await supabaseServerClient();
+  const { data } = await supabase.auth.getUser();
+
+  const userId = data.user?.id;
+
+  const { data: reviews, error } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("user_id", userId);
+
+  if (error) {
+    console.log("Error fetching reviews:", error.message);
+    return [];
+  }
+
+  return reviews;
+}
