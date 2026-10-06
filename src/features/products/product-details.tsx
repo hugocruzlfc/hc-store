@@ -1,9 +1,9 @@
 "use client";
 
 import { assets } from "@/assets";
-import { Navbar } from "@/components/navbar";
 import { env } from "@/lib/env/client";
 import { ProductParams } from "@/lib/types";
+import { Navbar } from "@/shared/components/navbar";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";

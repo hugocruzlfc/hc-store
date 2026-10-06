@@ -1,7 +1,7 @@
 "use client";
 
 import { assets } from "@/assets";
-import { saveAddressDB } from "@/shared/actions/address";
+import { saveAddressDB } from "@/features/address/actions/address";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

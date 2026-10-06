@@ -1,6 +1,6 @@
+import { fetchAddresses } from "@/features/address/actions/address";
 import BuyNow from "@/features/buy-now/buy-now";
 import { fetchProductById } from "@/features/products/actions/products";
-import { fetchAddresses } from "@/shared/actions/address";
 import { Metadata } from "next";
 
 export async function generateMetadata({
