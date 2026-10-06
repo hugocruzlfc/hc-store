@@ -1,4 +1,4 @@
-import { checkOrder } from "@/features/order/actions/order";
+import { checkOrder } from "@/features/orders/actions/order";
 import VerifyPay from "@/features/verify-pay/verify-pay";
 import { env } from "@/lib/env/client";
 import { redirect } from "next/navigation";

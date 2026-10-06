@@ -1,5 +1,5 @@
-import { fetchOrderById } from "@/features/order/actions/order";
-import Order from "@/features/order/order";
+import { fetchOrderById } from "@/features/orders/actions/order";
+import Order from "@/features/orders/order";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

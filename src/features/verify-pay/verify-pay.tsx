@@ -1,6 +1,6 @@
 "use client";
 
-import { createOrder } from "@/features/order/actions/order";
+import { createOrder } from "@/features/orders/actions/order";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
