@@ -1,8 +1,12 @@
 "use server";
 
-import { supabaseServerClient } from "@/lib/supabase/server";
+import { getCachedUser, supabaseServerClient } from "@/lib/supabase/server";
+import { DatabaseType } from "@/lib/supabase/types";
 import { OrderParams } from "@/shared/types";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+export type ReviewRecord = DatabaseType["public"]["Tables"]["reviews"]["Row"];
 
 interface ReviewDataParams {
   reviewTitle: string;
@@ -11,10 +15,11 @@ interface ReviewDataParams {
   deliveryRating: number;
   reviewImageUrls: string[];
 }
+
 export async function uploadImagesToSupabase(formData: FormData) {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const user = await getCachedUser();
+  const userId = user?.id;
 
   if (!userId) {
     console.log("No user found");
@@ -27,7 +32,6 @@ export async function uploadImagesToSupabase(formData: FormData) {
 
   try {
     const files = formData.getAll("reviewImages") as File[];
-    console.log(files);
     const uploadedImageUrls: string[] = [];
 
     for (const file of files) {
@@ -67,8 +71,8 @@ export async function createReview({
   orderToReview: OrderParams;
 }) {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const user = await getCachedUser();
+  const userId = user?.id;
 
   if (!userId) {
     console.log("No user found");
@@ -90,7 +94,6 @@ export async function createReview({
       amount_paid: orderToReview.amount_paid,
       product_name: orderToReview.product_name,
     })
-    .eq("user_id", userId)
     .select();
 
   if (error) {
@@ -98,24 +101,53 @@ export async function createReview({
     return { success: false, reviewData: null };
   }
 
+  revalidatePath("/reviews");
   return { success: true, reviewData: reviewDataFromDB };
 }
 
-export async function fetchReviewsByUserId() {
+export async function fetchReviewsByUserId(): Promise<ReviewRecord[]> {
   const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.getUser();
+  const user = await getCachedUser();
+  const userId = user?.id;
 
-  const userId = data.user?.id;
+  if (!userId) {
+    redirect("/login");
+  }
 
   const { data: reviews, error } = await supabase
     .from("reviews")
     .select("*")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.log("Error fetching reviews:", error.message);
     return [];
   }
 
-  return reviews;
+  return (reviews ?? []) as ReviewRecord[];
+}
+
+export async function deleteReview(reviewId: string) {
+  const supabase = await supabaseServerClient();
+  const user = await getCachedUser();
+  const userId = user?.id;
+
+  if (!userId) {
+    redirect("/login");
+  }
+
+  const { error } = await supabase
+    .from("reviews")
+    .delete()
+    .eq("id", reviewId)
+    .eq("user_id", userId);
+
+  if (error) {
+    console.log("Error deleting review:", error.message);
+    return false;
+  }
+
+  revalidatePath("/reviews");
+  return true;
 }
