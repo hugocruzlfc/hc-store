@@ -1,6 +1,7 @@
 "use client";
 
 import { createOrder } from "@/features/orders/actions/order";
+import { cartStore } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -48,6 +49,8 @@ export default function VerifyPay({
         };
 
         const orderId = await createOrder(orderItems);
+        cartStore.getState().clearCartItems();
+        localStorage.removeItem("paymentInformation");
         router.replace(`/order/${orderId}`);
       };
 

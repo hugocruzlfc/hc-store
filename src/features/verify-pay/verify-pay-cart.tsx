@@ -1,6 +1,7 @@
 "use client";
 
 import { createOrder } from "@/features/orders/actions/order";
+import { cartStore } from "@/store/cart-store";
 import Link from "next/link";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -29,20 +30,28 @@ export default function VerifyPayCart({
     toast.success("Payment Verified Successfully");
 
     const makeOrder = async () => {
-      for (const eachItem of paymentInfo.items) {
-        const orderItem = {
-          user_id: paymentInfo.userId,
-          amount: paymentInfo.amount,
-          user_email: paymentInfo.userEmail,
-          productName: eachItem.name,
-          quantity: eachItem.quantity,
-          productCategory: eachItem.category.name,
-          productImage: eachItem.image_url_array[0],
-          address: paymentInfo.fullAddressFields,
-          paymentReference: reference,
-        };
+      try {
+        for (const eachItem of paymentInfo.items) {
+          const orderItem = {
+            user_id: paymentInfo.userId,
+            amount: paymentInfo.amount,
+            user_email: paymentInfo.userEmail,
+            productName: eachItem.name,
+            quantity: eachItem.quantity,
+            productCategory: eachItem.category.name,
+            productImage: eachItem.image_url_array[0],
+            address: paymentInfo.fullAddressFields,
+            paymentReference: reference,
+          };
 
-        await createOrder(orderItem);
+          await createOrder(orderItem);
+        }
+
+        cartStore.getState().clearCartItems();
+        localStorage.removeItem("paymentInformation");
+      } catch (error) {
+        console.error("Error creating cart order:", error);
+        toast.error("There was a problem finishing your order.");
       }
     };
 

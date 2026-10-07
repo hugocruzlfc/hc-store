@@ -3,6 +3,7 @@
 import { assets } from "@/assets";
 import { signOut } from "@/features/auth/actions/auth-action";
 import { useAppContext } from "@/features/auth/context/app-context";
+import { cartStore } from "@/store/cart-store";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +14,9 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
   const { session, setSession } = useAppContext();
+  const cartItemsCount = cartStore((state) =>
+    state.items.reduce((total, item) => total + Number(item.quantity ?? 1), 0),
+  );
 
   const router = useRouter();
 
@@ -59,9 +63,14 @@ export const Navbar = () => {
 
           <Link
             href={"/cart"}
-            className="flex items-center gap-2 transition hover:text-gray-400"
+            className="relative flex items-center gap-2 transition hover:text-gray-400"
           >
             <Image src={assets.cart_icon} alt="cart" />
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#fce3c7] px-1 text-[10px] font-bold text-black">
+                {cartItemsCount > 99 ? "99+" : cartItemsCount}
+              </span>
+            )}
           </Link>
 
           <button
@@ -77,9 +86,17 @@ export const Navbar = () => {
             <Image className="h-6 w-6" src={assets.search_icon} alt="search" />
           </button>
 
-          <button className="flex items-center gap-2 transition hover:text-gray-400">
+          <Link
+            href="/cart"
+            className="relative flex items-center gap-2 transition hover:text-gray-400"
+          >
             <Image src={assets.cart_icon} alt="cart" className="h-6 w-6" />
-          </button>
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#fce3c7] px-1 text-[10px] font-bold text-black">
+                {cartItemsCount > 99 ? "99+" : cartItemsCount}
+              </span>
+            )}
+          </Link>
           <button
             onClick={checkIn}
             className="flex items-center gap-2 transition hover:text-gray-400"
