@@ -3,6 +3,7 @@
 import { assets } from "@/assets";
 import { env } from "@/lib/env/client";
 import { ProductParams } from "@/shared/types";
+import { cartStore } from "@/store/cart-store";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -18,8 +19,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       : (product.category?.name ?? "Uncategorized");
 
   const handleAddToCart = () => {
-    // const addItem = cartStore.getState().addItem;
-    // addItem(product);
+    const addItem = cartStore.getState().addItem;
+    addItem(product);
     toast.success("Check Cart");
   };
   return (
