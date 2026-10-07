@@ -6,7 +6,6 @@ import {
 } from "@/features/reviews/actions/review";
 import ReviewCard from "@/features/reviews/review-card";
 import ReviewDetail from "@/features/reviews/review-detail";
-import { Navbar } from "@/shared/components/navbar";
 import { useMemo, useState } from "react";
 
 interface ReviewsListProps {
@@ -49,8 +48,6 @@ export default function ReviewsList({ reviews }: ReviewsListProps) {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
-
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 lg:px-12">
         <div className="mb-6 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">

@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/shared/components/navbar";
 import { OrderParams } from "@/shared/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,8 +11,6 @@ interface OrderProps {
 export default function Order({ orderData }: OrderProps) {
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
-
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 lg:px-8">
         <div className="mb-6 flex items-center gap-3">
           <Link

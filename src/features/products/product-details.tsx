@@ -2,7 +2,6 @@
 
 import { assets } from "@/assets";
 import { env } from "@/lib/env/client";
-import { Navbar } from "@/shared/components/navbar";
 import { ProductParams } from "@/shared/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +24,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   };
   return (
     <>
-      <Navbar />
       <div className="space-y-10 px-6 pt-14 max-md:mt-4 max-md:p-0 md:px-16 lg:px-32">
         <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
           <div className="px-5 lg:px-16 xl:px-20">

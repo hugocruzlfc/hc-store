@@ -1,7 +1,6 @@
 import { fetchAddresses } from "@/features/address/actions/address";
 import AddressCard from "@/features/address/address-card";
 import NewAddress from "@/features/address/new-address";
-import { Navbar } from "@/shared/components/navbar";
 import { AddressParams } from "@/shared/types";
 import { Metadata } from "next";
 
@@ -12,7 +11,6 @@ export default async function Page() {
 
   return (
     <>
-      <Navbar />
       <NewAddress />
 
       {addresses && addresses.length > 0 && (

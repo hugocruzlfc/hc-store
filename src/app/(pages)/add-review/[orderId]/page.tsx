@@ -1,6 +1,7 @@
 import { fetchOrderById } from "@/features/orders/actions/order";
 import ReviewOrder from "@/features/reviews/review-order";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -30,6 +31,10 @@ export default async function AddReviewPage({
 }) {
   const { orderId } = await params;
   const order = await fetchOrderById(orderId);
+
+  if (!order) {
+    notFound();
+  }
 
   return <ReviewOrder order={order} />;
 }

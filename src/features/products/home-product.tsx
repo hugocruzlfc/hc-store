@@ -9,7 +9,7 @@ interface HomeProductsParams {
 
 export default function HomeProduct({ products }: HomeProductsParams) {
   return (
-    <div className="flex flex-col items-center pt-14">
+    <div className="flex flex-col items-center px-6 pt-14 md:px-16">
       <p className="w-full text-left text-2xl font-medium">Popular products</p>
 
       <div className="lg: mt-6 grid w-full max-w-375 grid-cols-2 gap-3 pb-14 max-md:gap-1.5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3">
