@@ -17,7 +17,7 @@ export default async function VerifyPaymentPageCart({
   }
 
   const response = await fetch(
-    `${env.NEXT_PUBLIC_SITE_URL}/api/verifyPayment/${reference}`,
+    `${env.NEXT_PUBLIC_SITE_URL}/api/verify-payment/${reference}`,
   );
 
   const result = await response.json();

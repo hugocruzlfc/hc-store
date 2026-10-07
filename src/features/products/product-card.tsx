@@ -9,39 +9,43 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
-      href={`product/${product.id}`}
-      className="flex w-full cursor-pointer flex-col items-start gap-0.5"
+      href={`/product/${product.id}`}
+      className="group block w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
     >
-      <div className="group relative flex w-full cursor-pointer items-center justify-center bg-gray-500/10">
-        <div className="">
-          <Image
-            src={product.image_url_array[0]}
-            alt={product.name}
-            className="object-contain transition group-hover:scale-105"
-            width={400}
-            height={400}
-          />
-        </div>
+      <div className="relative flex w-full items-center justify-center bg-slate-100/80 p-3">
+        <Image
+          src={product.image_url_array[0]}
+          alt={product.name}
+          className="h-56 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+          width={400}
+          height={400}
+        />
       </div>
 
-      <p className="w-full truncate pt-2 font-medium md:text-base">
-        {product.name}
-      </p>
-      <p className="w-full truncate text-xs text-gray-500/70 max-sm:truncate">
-        {product.description}
-      </p>
-      <div className="flex items-center gap-2">
-        <p className="text-xs">{4.5}</p>
-      </div>
-
-      <div className="mt-1 flex w-full items-end justify-between">
-        <p className="text-base font-medium">
-          {process.env.currency}
-          {product.price}
+      <div className="space-y-2 p-4">
+        <p className="w-full truncate text-base font-medium text-slate-900">
+          {product.name}
         </p>
-        <button className="rounded-full border border-gray-500/20 px-4 py-1.5 text-xs text-gray-500 transition hover:bg-slate-50 max-sm:hidden">
-          Buy now
-        </button>
+
+        <p className="w-full truncate text-sm text-slate-500 max-sm:truncate">
+          {product.description}
+        </p>
+
+        <div className="flex items-center gap-2 text-xs text-slate-500">
+          <span>★</span>
+          <span>{4.5}</span>
+        </div>
+
+        <div className="mt-2 flex w-full items-end justify-between gap-3">
+          <p className="text-lg font-semibold text-slate-900">
+            {process.env.currency}
+            {product.price}
+          </p>
+
+          <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 transition group-hover:bg-slate-900 group-hover:text-[#fce3c7] max-sm:hidden">
+            Buy now
+          </span>
+        </div>
       </div>
     </Link>
   );
