@@ -1,8 +1,22 @@
 import { env } from "@/lib/env/client";
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { DatabaseType } from "./types";
+
+export function supabasePublicServerClient() {
+  return createClient<DatabaseType>(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    },
+  );
+}
 
 export async function supabaseServerClient() {
   const cookieStore = await cookies();

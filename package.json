@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:home": "playwright test e2e/home-instant.test.ts",
     "gen:supabase-types": "supabase gen types typescript --project-id qshhhieknqiqddpswzjx --schema public > src/lib/supabase/types.ts"
   },
   "dependencies": {
@@ -24,6 +25,8 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
+    "@next/playwright": "^16.3.6",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
