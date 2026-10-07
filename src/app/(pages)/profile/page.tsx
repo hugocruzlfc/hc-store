@@ -2,6 +2,24 @@ import ProfileAddresses from "@/features/profile/profile-addresses";
 import ProfileHeader from "@/features/profile/profile-header";
 import ProfileOrders from "@/features/profile/profile-orders";
 import ProfileReviews from "@/features/profile/profile-reviews";
+import { getCachedUser } from "@/lib/supabase/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await getCachedUser();
+
+  if (!user) {
+    return {
+      title: "Profile",
+      description: "User profile page",
+    };
+  }
+
+  return {
+    title: `Profile for ${user.email}`,
+    description: `User profile page for ${user.email}`,
+  };
+}
 
 export default async function Page() {
   return (
