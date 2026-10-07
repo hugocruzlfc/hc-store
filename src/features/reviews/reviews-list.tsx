@@ -6,6 +6,7 @@ import {
 } from "@/features/reviews/actions/review";
 import ReviewCard from "@/features/reviews/review-card";
 import ReviewDetail from "@/features/reviews/review-detail";
+import { Navbar } from "@/shared/components/navbar";
 import { useMemo, useState } from "react";
 
 interface ReviewsListProps {
@@ -47,29 +48,33 @@ export default function ReviewsList({ reviews }: ReviewsListProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f5f1] px-4 py-8 md:px-8 lg:px-12">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium tracking-[0.22em] text-[#043033] uppercase">
-              Account
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold text-gray-900">
-              My Reviews
-            </h1>
+    <div className="min-h-screen bg-slate-50">
+      <Navbar />
+
+      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 lg:px-12">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div>
+              <p className="text-xs font-medium tracking-[0.22em] text-slate-500 uppercase">
+                Account
+              </p>
+              <h1 className="mt-1 text-3xl font-semibold text-slate-900">
+                My Reviews
+              </h1>
+            </div>
           </div>
 
-          <span className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600">
+          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600">
             {reviewList.length} review{reviewList.length === 1 ? "" : "s"}
           </span>
         </div>
 
         {reviewList.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-gray-300 bg-white p-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-800">
               No reviews yet
             </h2>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-slate-600">
               Your purchases will appear here once you publish a review.
             </p>
           </div>

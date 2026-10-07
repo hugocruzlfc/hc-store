@@ -27,9 +27,11 @@ export const Navbar = () => {
   };
   return (
     <nav className="flex items-center justify-between bg-black px-6 py-3 text-white md:px-16 lg:px-32">
-      <Link href="/">
-        <h1 className="text-[#fce3c7]">HC Store</h1>
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link href="/">
+          <h1 className="text-[#fce3c7]">HC Store</h1>
+        </Link>
+      </div>
       <div className="flex items-center gap-6 max-md:hidden lg:gap-8">
         <Link href="/" className="transition hover:text-gray-400">
           Home

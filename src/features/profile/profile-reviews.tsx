@@ -2,6 +2,7 @@ import {
   fetchReviewsByUserId,
   ReviewRecord,
 } from "@/features/reviews/actions/review";
+import Link from "next/link";
 
 export default async function ProfileReviews() {
   const reviews: ReviewRecord[] = await fetchReviewsByUserId();
@@ -20,16 +21,18 @@ export default async function ProfileReviews() {
       ) : (
         <ul className="space-y-3">
           {reviews.map((r: ReviewRecord) => (
-            <li
-              key={r.id}
-              className="rounded-xl border border-slate-200 bg-slate-50 p-4"
-            >
-              <div className="text-sm font-medium text-slate-800">
-                {r.review_title}
-              </div>
-              <div className="mt-1 text-sm text-slate-600">
-                {r.product_name}
-              </div>
+            <li key={r.id}>
+              <Link
+                href="/reviews"
+                className="block rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-slate-300 hover:bg-slate-100"
+              >
+                <div className="text-sm font-medium text-slate-800">
+                  {r.review_title}
+                </div>
+                <div className="mt-1 text-sm text-slate-600">
+                  {r.product_name}
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,5 +1,6 @@
 import { fetchAddresses } from "@/features/address/actions/address";
 import { AddressParams } from "@/shared/types";
+import Link from "next/link";
 
 export default async function ProfileAddresses() {
   const addresses = await fetchAddresses();
@@ -18,14 +19,16 @@ export default async function ProfileAddresses() {
       ) : (
         <ul className="space-y-3">
           {addresses.map((a: AddressParams) => (
-            <li
-              key={a.id}
-              className="rounded-xl border border-slate-200 bg-slate-50 p-4"
-            >
-              <div className="text-sm font-medium text-slate-800">
-                {a.title}
-              </div>
-              <div className="mt-1 text-sm text-slate-600">{a.address}</div>
+            <li key={a.id}>
+              <Link
+                href="/address"
+                className="block rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-slate-300 hover:bg-slate-100"
+              >
+                <div className="text-sm font-medium text-slate-800">
+                  {a.title}
+                </div>
+                <div className="mt-1 text-sm text-slate-600">{a.address}</div>
+              </Link>
             </li>
           ))}
         </ul>
